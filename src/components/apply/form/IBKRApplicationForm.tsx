@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -12,6 +12,8 @@ import { useSearchParams } from 'next/navigation'
 import { toast } from '@/hooks/use-toast'
 import AccountHolderInfoStep from './AccountHolderInfoStep'
 import { CreateApplication, SendApplicationToIBKR } from '@/utils/entities/application'
+import { GetForms } from '@/utils/entities/account'
+import { AllForms, FormDetails } from '@/lib/entities/account'
 import DocumentsStep from './DocumentsStep'
 import AccountTypeStep from './AccountTypeStep'
 import { Button } from '@/components/ui/button'
@@ -22,13 +24,17 @@ import ApplicationSuccess from './ApplicationSuccess'
 import { getApplicationDefaults } from '@/utils/form'
 import { useTranslationProvider } from '@/utils/providers/TranslationProvider'
 import { individual_form } from '@/lib/sample_info'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import LoadingComponent from '@/components/misc/LoadingComponent'
+import { Input } from '@/components/ui/input'
 
 enum FormStep {
   ACCOUNT_TYPE = 0,
   ACCOUNT_HOLDER_INFO = 1,
-  DOCUMENTS = 2,
-  SUMMARY = 3,
-  SUCCESS = 4
+  FORMS = 2,
+  DOCUMENTS = 3,
+  SUMMARY = 4,
+  SUCCESS = 5
 }
 
 const IBKRApplicationForm = () => {
@@ -38,9 +44,20 @@ const IBKRApplicationForm = () => {
 
   const [sentApplication, setSentApplication] = useState<Application | null>(null);
   const [sentApplicationResponse, setSentApplicationResponse] = useState<any | null>(null);
+  const [fetchedForms, setFetchedForms] = useState<FormDetails[] | null>(null);
+
+  const [userSignature, setUserSignature] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
   const { t } = useTranslationProvider();
+
+  useEffect(() => {
+    const fetchForms = async () => {
+      const forms = await GetForms(['3230', '3024', '4070', '3044', '3089', '4304', '4404', '5013', '5001', '4024', '9130', '3074', '3203', '3070', '3094', '3071', '4587', '2192', '2191', '3077', '4399', '4684', '2109', '4016', '4289']);
+      setFetchedForms(forms.formDetails);
+    }
+    fetchForms();
+  }, []);
 
   const form = useForm<Application>({
     resolver: zodResolver(application_schema),
@@ -59,6 +76,10 @@ const IBKRApplicationForm = () => {
     // Account Holder Information step: validate the full form (all currently registered fields)
     if (currentStep === FormStep.ACCOUNT_HOLDER_INFO) {
       return await form.trigger();
+    }
+
+    if (currentStep === FormStep.FORMS) {
+      return userSignature !== null;
     }
 
     // No extra validation required for other steps here
@@ -149,6 +170,7 @@ const IBKRApplicationForm = () => {
     const steps = [
       { name: t('apply.account.header.steps.account_type'), step: FormStep.ACCOUNT_TYPE },
       { name: t('apply.account.header.steps.account_holder_info'), step: FormStep.ACCOUNT_HOLDER_INFO },
+      { name: t('apply.account.header.steps.forms'), step: FormStep.FORMS },
       { name: t('apply.account.header.steps.documents'), step: FormStep.DOCUMENTS },
       { name: t('apply.account.header.steps.summary') ?? 'Review', step: FormStep.SUMMARY },
       { name: t('apply.account.header.steps.complete'), step: FormStep.SUCCESS }
@@ -248,9 +270,53 @@ const IBKRApplicationForm = () => {
                 </div>
               </>
             )}
+            {currentStep === FormStep.FORMS && (
+              <>
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-xl font-semibold mb-2">Agreements and Disclosures</h2>
+                    {fetchedForms ? fetchedForms.map((form) => (
+                      <Card key={form.formNumber} className="p-4">
+                        <CardContent>
+                          {form.formName}
+                          <p>{form.formNumber}</p>
+                        </CardContent>
+                      </Card>
+                    )) : (
+                      <LoadingComponent />
+                    )}
+                </div>
+                <div className="flex gap-2">
+                  <p className="text-sm">Please enter your signature to continue</p>
+                  {userSignature === null && <p className="text-sm text-primary">Required</p>}
+                </div>
+                <Input
+                  type="text"
+                  placeholder=""
+                  value={userSignature || ""}
+                  onChange={(e) => setUserSignature(e.target.value)}
+                />
+                <div className="flex justify-between">
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={handlePreviousStep}
+                  >
+                    Previous
+                  </Button>
+                  <Button 
+                    type="button" 
+                    onClick={handleNextStep}
+                    className="bg-primary text-background hover:bg-primary/90"
+                  >
+                    Next
+                  </Button>
+                </div>
+              </>
+            )}
             {currentStep === FormStep.SUMMARY && (
               <>
                 <div className="space-y-8">
+                  <h1>This page is just for IBKR debugging and compliance purposes, will not be shown to the user.</h1>
                   <div>
                     <h2 className="text-xl font-semibold mb-2">Application Sent</h2>
                     <pre className="bg-muted p-4 rounded text-xs overflow-x-auto whitespace-pre-wrap">

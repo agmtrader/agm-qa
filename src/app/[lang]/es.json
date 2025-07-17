@@ -307,6 +307,8 @@
                 "steps": {
                     "account_type": "Tipo de Cuenta",
                     "account_holder_info": "Información del Titular de la Cuenta",
+                    "summary": "Resumen",
+                    "forms": "Formularios",
                     "documents": "Documentos",
                     "complete": "Completo"
                 }
