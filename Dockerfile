@@ -4,7 +4,7 @@ FROM node:18-alpine AS base
 
 # Add labels for metadata
 LABEL maintainer="AGM Technology"
-LABEL name="agm-hub"
+LABEL name="agm-qa"
 LABEL version="1.0"
 LABEL description=""
 
