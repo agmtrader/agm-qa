@@ -77,7 +77,7 @@ const IBKRApplicationForm = () => {
 
   const form = useForm<Application>({
     resolver: zodResolver(application_schema),
-    defaultValues: individual_form,
+    defaultValues: getApplicationDefaults(application_schema),
     mode: 'onChange',
     shouldUnregister: false,
   });
@@ -162,6 +162,7 @@ const IBKRApplicationForm = () => {
       setSentApplication(internalApplication.application);
 
       const sendResponse = await SendApplicationToIBKR(internalApplication.application);
+      
       if (!sendResponse) {
         throw new Error('Failed to send application to IBKR');
       }
@@ -194,6 +195,7 @@ const IBKRApplicationForm = () => {
       { name: t('apply.account.header.steps.account_holder_info'), step: FormStep.ACCOUNT_HOLDER_INFO },
       { name: t('apply.account.header.steps.agreements'), step: FormStep.AGREEMENTS },
       { name: t('apply.account.header.steps.documents'), step: FormStep.DOCUMENTS },
+      { name: t('apply.account.header.steps.summary'), step: FormStep.SUMMARY },
       { name: t('apply.account.header.steps.complete'), step: FormStep.SUCCESS }
     ];
 
@@ -362,6 +364,21 @@ const IBKRApplicationForm = () => {
                     Previous
                   </Button>
                   <LoaderButton onClick={form.handleSubmit(onSubmit)} isLoading={isSubmitting} text="Submit Application"/>
+                </div>
+              </>
+            )}
+            {currentStep === FormStep.SUMMARY && (
+              <>
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-xl font-semibold mb-2">Summary</h2>
+                  <p className="text-sm">Application JSON</p>
+                  <div className="flex flex-col gap-2 bg-muted p-4 rounded-md max-h-[50vh] overflow-y-auto">
+                    <p className="text-sm font-mono">{JSON.stringify(sentApplication)}</p>
+                  </div>
+                  <p className="text-sm">Application Response JSON</p>
+                  <div className="flex flex-col gap-2 bg-muted p-4 rounded-md max-h-[50vh] overflow-y-auto">
+                    <p className="text-sm font-mono">{JSON.stringify(sentApplicationResponse)}</p>
+                  </div>
                 </div>
               </>
             )}
