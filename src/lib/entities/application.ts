@@ -26,16 +26,16 @@ import {
     source_of_wealth_schema,
     regulatory_detail_schema,
     trading_permission_schema,
-
     organization_schema,
     local_tax_form_schema,
     w8ben_schema
 } from './schemas/application';
-import { poa_schema, poi_schema, sow_schema } from './schemas/application';
+
+import { poa_schema, poi_schema } from './schemas/application';
+import { Base } from './base';
 
 export type POADocumentInfo = z.infer<typeof poa_schema>
 export type POIDocumentInfo = z.infer<typeof poi_schema>
-export type SOWDocumentInfo = z.infer<typeof sow_schema>
 
 export type Application = z.infer<typeof application_schema>;
 export type Customer = z.infer<typeof customer_schema>;
@@ -71,14 +71,13 @@ export type TradingPermission = z.infer<typeof trading_permission_schema>;
 
 export type Organization = z.infer<typeof organization_schema>;
 
-export interface InternalApplication {
-    id: string;
-    advisor_id: string | null;
+export type InternalApplicationPayload = {
+    advisor_code: string | null;
     master_account_id: string | null;
     lead_id: string | null;
     application: Application;
-    created: string;
-    updated: string;
     date_sent_to_ibkr: string | null;
     user_id: string | null;
 }
+
+export type InternalApplication = InternalApplicationPayload & Base

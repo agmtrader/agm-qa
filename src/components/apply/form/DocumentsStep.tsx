@@ -262,6 +262,8 @@ const DocumentsStep = ({ form, formData }: DocumentsStepProps) => {
         description: `Proof of Address document uploaded successfully for ${holderName}`,
         variant: "success"
       });
+      
+      console.log('[DocumentsStep] POA Document submitted:', newDoc);
     } catch (error) {
       console.error("Error processing POA document:", error);
       toast({
@@ -319,6 +321,8 @@ const DocumentsStep = ({ form, formData }: DocumentsStepProps) => {
         description: `Proof of Identity document uploaded successfully for ${holderName}`,
         variant: "success"
       });
+      
+      console.log('[DocumentsStep] POI Document submitted:', newDoc);
     } catch (error) {
       console.error("Error processing POI document:", error);
       toast({
@@ -376,6 +380,8 @@ const DocumentsStep = ({ form, formData }: DocumentsStepProps) => {
         description: "Proof of Existence document uploaded successfully for Organization",
         variant: "success"
       });
+      
+      console.log('[DocumentsStep] POE Document submitted:', newDoc);
     } catch (error) {
       console.error("Error processing POE document:", error);
       toast({
@@ -433,6 +439,8 @@ const DocumentsStep = ({ form, formData }: DocumentsStepProps) => {
         description: "Proof of Place of Business document uploaded successfully for Organization",
         variant: "success"
       });
+      
+      console.log('[DocumentsStep] PPB Document submitted:', newDoc);
     } catch (error) {
       console.error("Error processing PPB document:", error);
       toast({
