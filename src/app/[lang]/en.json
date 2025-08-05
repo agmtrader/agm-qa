@@ -312,6 +312,7 @@
                     "agreements": "Agreements",
                     "account_type": "Account Type",
                     "account_holder_info": "Account Holder Information",
+                    "email_confirmation": "Email Confirmation",
                     "documents": "Documents",
                     "summary": "Summary",
                     "complete": "Complete"

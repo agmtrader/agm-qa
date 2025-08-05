@@ -24,6 +24,7 @@ export async function accessAPI(url: string, type: string, params?: Map) {
 export async function getToken(): Promise<string | null> {
 
     try {
+
         const response = await fetch(`${api_url}/token`, {
             method: 'POST',
             headers: {

@@ -311,6 +311,7 @@
                     "agreements": "Acuerdos",
                     "account_type": "Tipo de Cuenta",
                     "account_holder_info": "Información del Titular de la Cuenta",
+                    "email_confirmation": "Confirmación de Correo Electrónico",
                     "documents": "Documentos",
                     "summary": "Resumen",
                     "complete": "Completo"
