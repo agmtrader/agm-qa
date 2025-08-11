@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button'
 import LoaderButton from '@/components/misc/LoaderButton'
 import { formatTimestamp } from '@/utils/dates'
 import { Check, Eye } from "lucide-react"
-import { individual_form, joint_form, organizational_form } from './SampleInfo'
+import { individual_form, joint_form, organizational_form, test_with_changes } from './SampleInfo'
 import ApplicationSuccess from './ApplicationSuccess'
 import { getApplicationDefaults } from '@/utils/form'
 import { useTranslationProvider } from '@/utils/providers/TranslationProvider'
@@ -88,7 +88,7 @@ const IBKRApplicationForm = () => {
 
   const form = useForm<Application>({
     resolver: zodResolver(application_schema),
-    defaultValues: getApplicationDefaults(application_schema),
+    defaultValues: test_with_changes,
     mode: 'onChange',
     shouldUnregister: false,
   });
