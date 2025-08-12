@@ -18,9 +18,9 @@ import { Button } from '@/components/ui/button'
 import LoaderButton from '@/components/misc/LoaderButton'
 import { formatTimestamp } from '@/utils/dates'
 import { Check, Eye } from "lucide-react"
-import { individual_form, joint_form, organizational_form } from './SampleInfo'
-import ApplicationSuccess from './ApplicationSuccess'
+import { individual_form, joint_form, organizational_form } from './samples'
 import { getApplicationDefaults } from '@/utils/form'
+import ApplicationSuccess from './ApplicationSuccess'
 import { useTranslationProvider } from '@/utils/providers/TranslationProvider'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -30,14 +30,13 @@ import { Input } from '@/components/ui/input'
 import { FormDetails } from '@/lib/entities/account'
 import { GetForms } from '@/utils/entities/account'
 import EmailConfirmationDialog from './EmailConfirmationDialog'
-import { accessAPI } from '@/utils/api'
 
 enum FormStep {
-  FEES = 0,
-  ACCOUNT_TYPE = 1,
-  ACCOUNT_HOLDER_INFO = 2,
-  AGREEMENTS = 3,
-  DOCUMENTS = 4,
+  ACCOUNT_TYPE = 0,
+  ACCOUNT_HOLDER_INFO = 1,
+  AGREEMENTS = 2,
+  DOCUMENTS = 3,
+  FEES = 4,
   SUMMARY = 5,
   SUCCESS = 6
 }
@@ -45,7 +44,7 @@ enum FormStep {
 const IBKRApplicationForm = () => {
 
   // State for step navigation and data
-  const [currentStep, setCurrentStep] = useState<FormStep>(FormStep.FEES);
+  const [currentStep, setCurrentStep] = useState<FormStep>(FormStep.ACCOUNT_TYPE);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fetchedForms, setFetchedForms] = useState<FormDetails[] | null>(null);
 
@@ -208,14 +207,13 @@ const IBKRApplicationForm = () => {
 
   const renderProgress = () => {
     const steps = [
-      { name: t('fees.title'), step: FormStep.FEES },
       { name: t('apply.account.header.steps.account_type'), step: FormStep.ACCOUNT_TYPE },
       { name: t('apply.account.header.steps.account_holder_info'), step: FormStep.ACCOUNT_HOLDER_INFO },
-      
       { name: t('apply.account.header.steps.agreements'), step: FormStep.AGREEMENTS },
       { name: t('apply.account.header.steps.documents'), step: FormStep.DOCUMENTS },
+      { name: t('fees.title'), step: FormStep.FEES },
       { name: t('apply.account.header.steps.summary'), step: FormStep.SUMMARY },
-      { name: t('apply.account.header.steps.complete'), step: FormStep.SUCCESS }
+      { name: t('apply.account.header.steps.complete'), step: FormStep.SUCCESS },
     ];
 
     console.log(form.formState.errors);
