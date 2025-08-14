@@ -32,11 +32,11 @@ import { GetForms } from '@/utils/entities/account'
 import EmailConfirmationDialog from './EmailConfirmationDialog'
 
 enum FormStep {
-  ACCOUNT_TYPE = 0,
-  ACCOUNT_HOLDER_INFO = 1,
-  AGREEMENTS = 2,
-  DOCUMENTS = 3,
-  FEES = 4,
+  FEES = 0,
+  ACCOUNT_TYPE = 1,
+  ACCOUNT_HOLDER_INFO = 2,
+  AGREEMENTS = 3,
+  DOCUMENTS = 4,
   SUMMARY = 5,
   SUCCESS = 6
 }
@@ -44,7 +44,7 @@ enum FormStep {
 const IBKRApplicationForm = () => {
 
   // State for step navigation and data
-  const [currentStep, setCurrentStep] = useState<FormStep>(FormStep.ACCOUNT_TYPE);
+  const [currentStep, setCurrentStep] = useState<FormStep>(FormStep.FEES);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fetchedForms, setFetchedForms] = useState<FormDetails[] | null>(null);
 
@@ -87,7 +87,7 @@ const IBKRApplicationForm = () => {
 
   const form = useForm<Application>({
     resolver: zodResolver(application_schema),
-    defaultValues: getApplicationDefaults(application_schema),
+    defaultValues: individual_form,
     mode: 'onChange',
     shouldUnregister: false,
   });
@@ -207,11 +207,11 @@ const IBKRApplicationForm = () => {
 
   const renderProgress = () => {
     const steps = [
+      { name: t('fees.title'), step: FormStep.FEES },
       { name: t('apply.account.header.steps.account_type'), step: FormStep.ACCOUNT_TYPE },
       { name: t('apply.account.header.steps.account_holder_info'), step: FormStep.ACCOUNT_HOLDER_INFO },
       { name: t('apply.account.header.steps.agreements'), step: FormStep.AGREEMENTS },
       { name: t('apply.account.header.steps.documents'), step: FormStep.DOCUMENTS },
-      { name: t('fees.title'), step: FormStep.FEES },
       { name: t('apply.account.header.steps.summary'), step: FormStep.SUMMARY },
       { name: t('apply.account.header.steps.complete'), step: FormStep.SUCCESS },
     ];
@@ -393,6 +393,22 @@ const IBKRApplicationForm = () => {
                   <p className="text-sm">Application Response JSON</p>
                   <div className="flex flex-col gap-2 bg-muted p-4 rounded-md max-h-[50vh] overflow-y-auto">
                     <p className="text-sm font-mono">{JSON.stringify(sentApplicationResponse)}</p>
+                  </div>
+                  <div className="flex justify-between pt-2">
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={handlePreviousStep}
+                    >
+                      Previous
+                    </Button>
+                    <Button 
+                      type="button" 
+                      className="bg-primary text-background hover:bg-primary/90"
+                      onClick={() => setCurrentStep(FormStep.SUCCESS)}
+                    >
+                      Complete
+                    </Button>
                   </div>
                 </div>
               </>
